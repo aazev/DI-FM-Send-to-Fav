@@ -11,20 +11,6 @@
 // @noframes
 // ==/UserScript==
 
-/*
-	classes:
-	up:		"value",  icon-thumbs-up-outline / icon-thumbs-up-filled
-	dpwm:	icon-thumbs-down-outline / icon-thumbs-down-filled
-*/
-
-/*
-$("#webplayer-region").on({
-	click:function(evt){
-		console.log("Click event triggered.");
-		console.log($(this).attr("data-vote"));
-	}
-},".track-region .actions-container .voting-region .vote-buttons li");
-*/
 var options={
 	ajaxMode:'Greasemonkey', //jQuery, Greasemonkey,debug
 };
@@ -122,27 +108,4 @@ $(document).ready(function(){
             sendToSlack(info);
 		}
 	},".track-region .actions-container .voting-region .vote-buttons li");
-	//timecode
-	/*$("#webplayer-region").on({
-		click:function(evt){
-			info=getTrackInfo();
-			sendToSlack(info);
-		}
-	},".track-region span.timecode");*/
-
-
-	/*$("#content-wrap").on({
-		click:function(evt){
-			var voteKind=$(this).attr("data-vote");
-			var DITrackinfo=di.app.request('webplayer:track');
-			var DIChannelinfo=di.app.request('webplayer:channel');
-			var info={track:{}};
-			info.chan = DIChannelinfo.attributes.name;
-			info.chanUrl = "/"+DIChannelinfo.attributes.key;
-			info.track.id = DITrackinfo.attributes.id;
-			info.track.artist = DITrackinfo.attributes.display_artist;
-			info.track.title = DITrackinfo.attributes.display_title;
-			sendFavourite(info,voteKind);
-		}
-	},"#recently-played .tracks-region .item .vote-button-region .track-voting li");*/
 });
