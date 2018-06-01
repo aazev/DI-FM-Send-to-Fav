@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DI.FM send favourite to page
 // @namespace    http://duxstudio.com.br
-// @version      1.0.5
+// @version      1.1.2
 // @description  When the button like is clicked, it sends the information about the track, and channel currently playing to a webpage.
 // @author       André Azevedo
 // @match        *://www.di.fm/*
@@ -9,11 +9,31 @@
 // @connect		 support.duxstudio.com.br
 // @connect		 hooks.slack.com
 // @noframes
+// @downloadURL  http://support.duxstudio.com.br/bin/DIFMToPage.js
+// @updateURL    http://support.duxstudio.com.br/bin/DIFMToPage.js
 // ==/UserScript==
 
+/*
+	classes:
+	up:		"value",  icon-thumbs-up-outline / icon-thumbs-up-filled
+	dpwm:	icon-thumbs-down-outline / icon-thumbs-down-filled
+*/
+
+/*
+$("#webplayer-region").on({
+	click:function(evt){
+		console.log("Click event triggered.");
+		console.log($(this).attr("data-vote"));
+	}
+},".track-region .actions-container .voting-region .vote-buttons li");
+*/
 var options={
 	ajaxMode:'Greasemonkey', //jQuery, Greasemonkey,debug
 };
+
+function safeEncode(str) {
+	return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 function sendFavourite(info,voteKind){
 
@@ -62,22 +82,22 @@ function sendToSlack(info){
 	$.ajax({
 		url:url,
 		method: "POST",
-		dataType: 'json',
+		//dataType: 'json',
 		processData: false,
 		data: 'payload='+JSON.stringify({
 			"channel": "music",
 			"username": "DIFM-BOT",
-			"text": "<@U8ZPJCDND> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+info.track.artist+"* - "+info.track.title+"> aos favoritos!!!",
+			"text": "<@U8ZPJCDND> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!",
 		}),
-        error:function(jqXHR,textStatus, errorThrown){
-            console.log(textStatus,errorThrown);
-        },
+		error:function(jqXHR,textStatus, errorThrown){
+			console.log(textStatus,errorThrown);
+		},
 		success:function(data,textStatus,jqXHR){
 			console.log('Sucess!!! Slack said: '+data);
 		},
-        complete:function(jqXHR, textStatus){
-            console.log(info,"And slack said: "+textStatus);
-        }
+		complete:function(jqXHR, textStatus){
+			console.log(info,"And slack said: "+textStatus);
+		}
 	});
 }
 // di.app.request('webplayer:track')
@@ -103,9 +123,32 @@ $(document).ready(function(){
 	$("#webplayer-region").on({
 		click:function(evt){
 			var voteKind=$(this).attr("data-vote");
-			info=getTrackInfo();
+			var info=getTrackInfo();
 			sendFavourite(info,voteKind);
-            sendToSlack(info);
+			sendToSlack(info);
 		}
 	},".track-region .actions-container .voting-region .vote-buttons li");
+	//timecode
+	$("#webplayer-region").on({
+		click:function(evt){
+			var info=getTrackInfo();
+			sendToSlack(info);
+		}
+	},".track-region span.timecode");
+
+
+	/*$("#content-wrap").on({
+		click:function(evt){
+			var voteKind=$(this).attr("data-vote");
+			var DITrackinfo=di.app.request('webplayer:track');
+			var DIChannelinfo=di.app.request('webplayer:channel');
+			var info={track:{}};
+			info.chan = DIChannelinfo.attributes.name;
+			info.chanUrl = "/"+DIChannelinfo.attributes.key;
+			info.track.id = DITrackinfo.attributes.id;
+			info.track.artist = DITrackinfo.attributes.display_artist;
+			info.track.title = DITrackinfo.attributes.display_title;
+			sendFavourite(info,voteKind);
+		}
+	},"#recently-played .tracks-region .item .vote-button-region .track-voting li");*/
 });
