@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DI.FM send favourite to page
 // @namespace    http://duxstudio.com.br
-// @version      1.1.2
+// @version      1.1.5
 // @description  When the button like is clicked, it sends the information about the track, and channel currently playing to a webpage.
 // @author       André Azevedo
 // @match        *://www.di.fm/*
@@ -9,24 +9,10 @@
 // @connect		 support.duxstudio.com.br
 // @connect		 hooks.slack.com
 // @noframes
-// @downloadURL  http://support.duxstudio.com.br/bin/DIFMToPage.js
-// @updateURL    http://support.duxstudio.com.br/bin/DIFMToPage.js
+// @downloadURL  https://raw.githubusercontent.com/aazev/DI-FM-Send-to-Fav/master/DIFMToPage.js
+// @updateURL    https://raw.githubusercontent.com/aazev/DI-FM-Send-to-Fav/master/DIFMToPage.js
 // ==/UserScript==
 
-/*
-	classes:
-	up:		"value",  icon-thumbs-up-outline / icon-thumbs-up-filled
-	dpwm:	icon-thumbs-down-outline / icon-thumbs-down-filled
-*/
-
-/*
-$("#webplayer-region").on({
-	click:function(evt){
-		console.log("Click event triggered.");
-		console.log($(this).attr("data-vote"));
-	}
-},".track-region .actions-container .voting-region .vote-buttons li");
-*/
 var options={
 	ajaxMode:'Greasemonkey', //jQuery, Greasemonkey,debug
 };
@@ -100,8 +86,6 @@ function sendToSlack(info){
 		}
 	});
 }
-// di.app.request('webplayer:track')
-// di.app.request('webplayer:channel')
 
 function getTrackInfo(mode){
 	var info={track:{}};
@@ -135,7 +119,6 @@ $(document).ready(function(){
 			sendToSlack(info);
 		}
 	},".track-region span.timecode");
-
 
 	/*$("#content-wrap").on({
 		click:function(evt){
