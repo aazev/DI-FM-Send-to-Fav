@@ -109,7 +109,7 @@ $(document).ready(function(){
 			var voteKind=$(this).attr("data-vote");
 			var info=getTrackInfo();
 			sendFavourite(info,voteKind);
-			sendToSlack(info);
+			//'sendToSlack(info);
 		}
 	},".track-region .actions-container .voting-region .vote-buttons li");
 	//timecode
