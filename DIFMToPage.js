@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DI.FM send favourite to page
 // @namespace    http://duxstudio.com.br
-// @version      1.1.5
+// @version      1.1.7
 // @description  When the button like is clicked, it sends the information about the track, and channel currently playing to a webpage.
 // @author       André Azevedo
 // @match        *://www.di.fm/*
@@ -14,7 +14,7 @@
 // ==/UserScript==
 
 var options={
-	ajaxMode:'Greasemonkey', //jQuery, Greasemonkey,debug
+	ajaxMode:'jQuery', //jQuery, Greasemonkey,debug
 };
 
 function safeEncode(str) {
@@ -26,7 +26,7 @@ function sendFavourite(info,voteKind){
 	switch(options.ajaxMode){
 		case "jQuery":
 			$.ajax({
-				url:"http://support.duxstudio.com.br/addFav.php",
+				url:"https://support.duxstudio.com.br/addFav.php",
 				type:"POST",
 				data:{
 					action:"addFav",
@@ -46,7 +46,7 @@ function sendFavourite(info,voteKind){
 			var uri="action=addFav&type="+voteKind+"&"+decodeURIComponent($.param(favourite));
 
 			GM_xmlhttpRequest({
-				url:"http://support.duxstudio.com.br/addFav.php",
+				url:"https://support.duxstudio.com.br/addFav.php",
 				method:"POST",
 				data:uri,
 				headers:{
@@ -64,7 +64,8 @@ function sendFavourite(info,voteKind){
 }
 
 function sendToSlack(info){
-	var url="https://hooks.slack.com/services/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";
+	//var url="https://hooks.slack.com/services/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"; //somosamambo.slack.com
+	var url="https://hooks.slack.com/services/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";
 	$.ajax({
 		url:url,
 		method: "POST",
@@ -73,7 +74,8 @@ function sendToSlack(info){
 		data: 'payload='+JSON.stringify({
 			"channel": "music",
 			"username": "DIFM-BOT",
-			"text": "<@U8ZPJCDND> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!",
+			//"text": "<@U8ZPJCDND> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!",
+			"text": "<@UBBCZSXLH> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!",
 		}),
 		error:function(jqXHR,textStatus, errorThrown){
 			console.log(textStatus,errorThrown);
@@ -109,7 +111,7 @@ $(document).ready(function(){
 			var voteKind=$(this).attr("data-vote");
 			var info=getTrackInfo();
 			sendFavourite(info,voteKind);
-			//'sendToSlack(info);
+			sendToSlack(info);
 		}
 	},".track-region .actions-container .voting-region .vote-buttons li");
 	//timecode
