@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         DI.FM send favourite to page
+// @name         DI.FM send favourite to page 1.1.8
 // @namespace    http://duxstudio.com.br
-// @version      1.1.7
+// @version      1.1.8
 // @description  When the button like is clicked, it sends the information about the track, and channel currently playing to a webpage.
 // @author       André Azevedo
 // @match        *://www.di.fm/*
@@ -66,17 +66,19 @@ function sendFavourite(info,voteKind){
 function sendToSlack(info){
 	//var url="https://hooks.slack.com/services/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"; //somosamambo.slack.com
 	var url="https://hooks.slack.com/services/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";
+    var payload = {
+			"channel": "music",
+			"username": "DIFM-BOT",
+			"icon_url": "https://support.duxstudio.com.br/res/img/musicbot.png",
+			//"text": "<@U8ZPJCDND> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!",
+			"text": "<@UBBCZSXLH> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!"
+		};
 	$.ajax({
 		url:url,
 		method: "POST",
-		//dataType: 'json',
+		dataType: 'json',
 		processData: false,
-		data: 'payload='+JSON.stringify({
-			"channel": "music",
-			"username": "DIFM-BOT",
-			//"text": "<@U8ZPJCDND> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!",
-			"text": "<@UBBCZSXLH> acabou de adicionar <https://di.fm/tracks/"+info.track.id+info.chanUrl+"|*"+safeEncode(info.track.artist)+"* - "+safeEncode(info.track.title)+"> do canal <https://di.fm"+info.chanUrl+"|*"+info.chan+"*> aos favoritos!!!",
-		}),
+		data: JSON.stringify(payload),
 		error:function(jqXHR,textStatus, errorThrown){
 			console.log(textStatus,errorThrown);
 		},
@@ -84,7 +86,7 @@ function sendToSlack(info){
 			console.log('Sucess!!! Slack said: '+data);
 		},
 		complete:function(jqXHR, textStatus){
-			console.log(info,"And slack said: "+textStatus);
+			console.log(payload,"And slack said: "+textStatus);
 		}
 	});
 }
