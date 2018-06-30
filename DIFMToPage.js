@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         DI.FM send favourite to page 1.1.8
+// @name         DI.FM send favourite to page
 // @namespace    http://duxstudio.com.br
 // @version      1.1.8
 // @description  When the button like is clicked, it sends the information about the track, and channel currently playing to a webpage.
