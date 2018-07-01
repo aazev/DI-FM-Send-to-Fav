@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DI.FM send favourite to page
 // @namespace    http://duxstudio.com.br
-// @version      1.1.8
+// @version      1.1.9
 // @description  When the button like is clicked, it sends the information about the track, and channel currently playing to a webpage.
 // @author       André Azevedo
 // @match        *://www.di.fm/*
@@ -76,7 +76,7 @@ function sendToSlack(info){
 	$.ajax({
 		url:url,
 		method: "POST",
-		dataType: 'json',
+		//dataType: 'json',
 		processData: false,
 		data: JSON.stringify(payload),
 		error:function(jqXHR,textStatus, errorThrown){
