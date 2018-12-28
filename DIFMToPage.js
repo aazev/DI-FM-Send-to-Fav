@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DI.FM send favourite to page
 // @namespace    http://duxstudio.com.br
-// @version      1.1.9
+// @version      1.2.0
 // @description  When the button like is clicked, it sends the information about the track, and channel currently playing to a webpage.
 // @author       André Azevedo
 // @match        *://www.di.fm/*
@@ -115,7 +115,7 @@ $(document).ready(function(){
 			sendFavourite(info,voteKind);
 			sendToSlack(info);
 		}
-	},".track-region .actions-container .voting-region .vote-buttons li");
+	},".track-region .actions-container .voting-region .vote-buttons-component li[data-vote]");
 	//timecode
 	$("#webplayer-region").on({
 		click:function(evt){
